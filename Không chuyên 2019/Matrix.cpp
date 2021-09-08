@@ -22,15 +22,15 @@ void show(vector<vector<long long>> v){
 }
 
 // Nhân 2 vector (nhân hàng với cột)
-long long dot(vector<long long> u, vector<long long> v){
+long long dot(vector<long long> u, vector<long long> v, int S){
     if(u.size() != v.size()){
         return 0;
     }
     long long ans = 0;
     for(long long i = 0; i < u.size(); i++){
-        ans += u[i] * v[i];
+        ans += ((u[i] * v[i]) % S);
     }
-    return ans;
+    return ans >= 0 ? (ans % S) : (ans % S + S)%S;
 }
 
 // Chuyển vị ma trận để hàng biến thành cột cho dễ tính
@@ -45,7 +45,7 @@ vector<vector<long long>> transpose(vector<vector<long long>> v){
 }
 
 // Nhân 2 ma trận
-vector<vector<long long>> dot(vector<vector<long long>> u, vector<vector<long long>> v){
+vector<vector<long long>> dot(vector<vector<long long>> u, vector<vector<long long>> v, int S){
     // Chuyển vị ma trận v để dễ lấy ra 1 cột và truyền vào hàm dot
     v = transpose(v);
 
@@ -55,7 +55,7 @@ vector<vector<long long>> dot(vector<vector<long long>> u, vector<vector<long lo
     for(long long i = 0; i < w.size(); i++){
         for(long long j = 0; j < w[i].size(); j++){
             // Nhân hàng với cột(hàng của ma trận chuyển vị v)
-            w[i][j] = dot(u[i], v[j]);
+            w[i][j] = dot(u[i], v[j], S);
         }
     }
 
@@ -86,7 +86,7 @@ int main(){
         init(v);
 
         // Nhân 2 ma trận kích thước (1 x n) x (n x n) sẽ được ma trận (1 x n). Giảm được (n - 1)^2 lần tính toán
-        w = dot(w, v);
+        w = dot(w, v, S);
     }
 
     // Tọa độ của đề bài phải trừ đi 1 mới đúng
